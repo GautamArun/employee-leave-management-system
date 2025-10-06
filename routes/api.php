@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LeaveRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,11 +20,14 @@ Route::middleware('auth')->group(function() {
 
     // employee only routes
     Route::middleware('role:employee')->group(function() {
-        Route::get('employee/dashboard', fn() => response()->json(['message' => 'employee dashboard']));
+        Route::get('leaves', [LeaveRequestController::class, 'index']);
+        Route::post('leaves', [LeaveRequestController::class, 'store']);
+        Route::put('leaves/{id}', [LeaveRequestController::class, 'update']);
+        Route::delete('leaves/{id}', [LeaveRequestController::class, 'destroy']);
     });
 
     // admin only routes
     Route::middleware('role:admin')->group(function() {
-        Route::get('admin/dashboard', fn() => response()->json(['message' => 'admin dashboard']));
+        Route::patch('admin/leaves/{id}/status', [LeaveRequestController::class, 'updateStatus']);
     });
 });

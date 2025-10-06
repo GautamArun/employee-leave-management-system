@@ -20,7 +20,7 @@ class RoleMiddleware
             return response()->json(['error' => 'Unauthorized', 401]);
         }
 
-        if(Auth::user()->role != $role) {
+        if(Auth::user()->roles != $role) {
             return response()->json(['error' => 'You do not have access, admins only allowed'], 403);
         }
 
