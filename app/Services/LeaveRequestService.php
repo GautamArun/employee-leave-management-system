@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Mail\LeaveStatusChange;
 use App\Models\LeaveRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class LeaveRequestService {
 
@@ -31,10 +33,13 @@ class LeaveRequestService {
 
     public function updateLeaveStatus(int $id, string $status){
         $changeLeaveStatus = LeaveRequest::findOrFail($id);
+
         $changeLeaveStatus->update([
             'status' => $status,
             'approved_by' => Auth::id(),
         ]);
+
+        Mail::to($changeLeaveStatus->user->email)->send(new LeaveStatusChange($changeLeaveStatus));
 
         return $changeLeaveStatus;
     }
